@@ -11,7 +11,7 @@ part of 'app_router.dart';
 
 abstract class _$AppRouter extends RootStackRouter {
   // ignore: unused_element
-  _$AppRouter();
+  _$AppRouter({super.navigatorKey});
 
   @override
   final Map<String, PageFactory> pagesMap = {
@@ -43,6 +43,12 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const HouseJoinScreen(),
+      );
+    },
+    HouseSettingsRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const HouseSettingsScreen(),
       );
     },
   };
@@ -114,6 +120,20 @@ class HouseJoinRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'HouseJoinRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [HouseSettingsScreen]
+class HouseSettingsRoute extends PageRouteInfo<void> {
+  const HouseSettingsRoute({List<PageRouteInfo>? children})
+      : super(
+          HouseSettingsRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'HouseSettingsRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
