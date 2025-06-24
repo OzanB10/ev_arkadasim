@@ -119,4 +119,22 @@ class HouseRepositoryImpl implements HouseRepository {
       joinedAt: model.joinedAt,
     )).toList();
   }
+
+  @override
+  Future<House?> updateHouseName({required String houseId, required String newName}) {
+    // TODO: Implement updateHouseName
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> leaveHouse({required String houseId, required String memberId}) {
+    // TODO: Implement leaveHouse
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> deleteHouse(String houseId) {
+    // TODO: Implement deleteHouse
+    throw UnimplementedError();
+  }
 } 
