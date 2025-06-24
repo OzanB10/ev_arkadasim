@@ -1,0 +1,70 @@
+✅ PROJE ADI: EvArkadaşım - Ortak Gider Takibi
+🎯 Amaç
+Ev arkadaşları arasında yapılan ortak harcamaların takip edilmesini sağlayan, sade ve offline da çalışabilen bir Flutter uygulaması.
+
+🧩 Temel Özellikler (MVP)
+Ev Oluştur / Katıl:
+
+Kullanıcı, yeni bir ev grubu oluşturur veya birine katılır.
+
+Kodla katılma özelliği ile arkadaşlarını davet edebilir.
+
+Harcama Ekle:
+
+Kim ödedi?
+
+Ne kadar ödedi?
+
+Kimler arasında bölünsün?
+
+Açıklama (opsiyonel)
+
+Bakiye Hesabı:
+
+Kimin kime ne kadar borcu var otomatik hesaplanır.
+
+“Ödeme yapıldı” özelliği ile kayıt tutulur.
+
+Aylık Gider Özeti:
+
+Aylık toplam harcama
+
+Kişisel katkı / borç / alacak tablosu
+
+Offline Çalışma:
+
+Uygulama internet olmasa bile kullanılabilir
+
+Firebase opsiyonel olarak eklenebilir
+
+📦 Kullanılacak Teknolojiler
+Alan	Tercih
+UI	Flutter (Material 3 + Hooks)
+State Yönetimi	Riverpod (veya flutter_hooks)
+Local DB	Isar veya Hive
+Cloud Sync (opsiyonel)	Firebase Firestore
+Kimlik Doğrulama	Firebase Auth (anonim de olur)
+Bildirim (isteğe bağlı)	Firebase Cloud Messaging
+
+
+PREMIUM OLARAK SUNABİLECEĞİN ÖZELLİKLER
+
+✅ 2. Gelişmiş Aylık Rapor
+Ücretsizde sadece toplamlar gösterilir.
+Premium’da grafik, kategori bazlı özet, Excel/PDF dışa aktarma olur.
+
+✅ 3. Fatura Fotoğrafı Yükleme
+Kullanıcı faturanın fotoğrafını ekleyebilir (Storage maliyeti!)
+Ücretsizde bu yok, Premium’da eklenir.
+
+✅ 4. Bulut Senkronizasyonu + Hesap Yedekleme
+Offline veriler, premium kullanıcılar için Firebase’e senkronize edilir.
+Telefon bozulsa bile veriler güvende.
+
+✅ 5. Bildirim ve Hatırlatma Sistemi
+"Kira günü geldi!" gibi planlanmış push notification’lar
+Ücretsiz kullanıcılara sunulmaz
+ 8. Ortak Cüzdan / Ödeme Linki
+“Arkadaşına ödeme hatırlat” özelliği → linkle ödeme yollansın
+PayTR / Iyzico link entegrasyonu yapılabilir
+Bu özelliği Premium’da veya “her link 1₺” gibi mikro ödeme ile sunabilirsin
