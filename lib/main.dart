@@ -1,5 +1,7 @@
+import 'package:ev_arkadasim/features/home/presentation/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 import 'app/app.dart';
 import 'core/di/injection.dart';
@@ -7,36 +9,19 @@ import 'core/di/injection.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
+  // Hive database initialization
+  await Hive.initFlutter();
+  
+  // Dependency injection setup
   await initializeDependencies();
   
   runApp(
     const ProviderScope(
-      child: EvArkadasimApp(),
+      child: MyApp(),
     ),
   );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'EvArkadaşım',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('EvArkadaşım'),
-        ),
-        body: const Center(
-          child: Text('Proje Kurulumu Tamamlandı!'),
-        ),
-      ),
-    );
-  }
-}
 
 
