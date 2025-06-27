@@ -15,4 +15,16 @@ abstract class HouseRepository {
   Future<House?> getCurrentHouse();
   
   Future<List<Member>> getHouseMembers(String houseId);
+
+  Future<House?> updateHouseName({
+    required String houseId,
+    required String newName,
+  });
+
+  Future<bool> leaveHouse({
+    required String houseId,
+    required String memberId,
+  });
+
+  Future<bool> deleteHouse(String houseId);
 } 

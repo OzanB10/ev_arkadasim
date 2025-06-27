@@ -1,11 +1,10 @@
-import 'package:auto_route/auto_route.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/constants/app_constants.dart';
 import '../viewmodels/house_controller.dart';
 
-@RoutePage()
 class HouseCreateScreen extends ConsumerStatefulWidget {
   const HouseCreateScreen({super.key});
 
@@ -33,7 +32,7 @@ class _HouseCreateScreenState extends ConsumerState<HouseCreateScreen> {
       next.whenOrNull(
         data: (house) {
           if (house != null) {
-            context.router.popUntilRoot();
+            Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
           }
         },
         error: (error, stack) {

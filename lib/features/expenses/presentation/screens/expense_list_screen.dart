@@ -1,10 +1,9 @@
-import 'package:auto_route/auto_route.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/constants/app_constants.dart';
 
-@RoutePage()
 class ExpenseListScreen extends ConsumerWidget {
   const ExpenseListScreen({super.key});
 
@@ -15,7 +14,7 @@ class ExpenseListScreen extends ConsumerWidget {
         title: const Text('Harcamalar'),
         actions: [
           IconButton(
-            onPressed: () => context.router.pushNamed('/expenses/add'),
+            onPressed: () => Navigator.of(context).pushNamed('/expenses/add'),
             icon: const Icon(Icons.add),
           ),
         ],

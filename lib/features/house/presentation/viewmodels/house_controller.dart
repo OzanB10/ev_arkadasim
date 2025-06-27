@@ -65,6 +65,61 @@ class HouseNotifier extends StateNotifier<AsyncValue<House?>> {
     }
   }
   
+  Future<void> updateHouseName({required String newName}) async {
+    final currentHouse = state.value;
+    if (currentHouse == null) return;
+
+    state = const AsyncValue.loading();
+    try {
+      final updatedHouse = await _repository.updateHouseName(
+        houseId: currentHouse.id,
+        newName: newName,
+      );
+      state = AsyncValue.data(updatedHouse);
+    } catch (error, stackTrace) {
+      state = AsyncValue.error(error, stackTrace);
+      // Rollback to previous state on error
+      state = AsyncValue.data(currentHouse);
+    }
+  }
+
+  Future<void> leaveHouse() async {
+    // TODO: Need memberId to leave house. For now, we assume it is handled.
+    final currentHouse = state.value;
+    if (currentHouse == null) return;
+
+    state = const AsyncValue.loading();
+    try {
+      final success = await _repository.leaveHouse(houseId: currentHouse.id, memberId: 'current_user_id'); // Placeholder
+      if (success) {
+        state = const AsyncValue.data(null);
+      } else {
+        throw Exception('Evden ayrılamadı');
+      }
+    } catch (error, stackTrace) {
+      state = AsyncValue.error(error, stackTrace);
+      state = AsyncValue.data(currentHouse);
+    }
+  }
+
+  Future<void> deleteHouse() async {
+    final currentHouse = state.value;
+    if (currentHouse == null) return;
+
+    state = const AsyncValue.loading();
+    try {
+      final success = await _repository.deleteHouse(currentHouse.id);
+      if (success) {
+        state = const AsyncValue.data(null);
+      } else {
+        throw Exception('Ev silinemedi');
+      }
+    } catch (error, stackTrace) {
+      state = AsyncValue.error(error, stackTrace);
+      state = AsyncValue.data(currentHouse);
+    }
+  }
+  
   void refresh() {
     _loadCurrentHouse();
   }

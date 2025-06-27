@@ -1,15 +1,15 @@
-import 'package:auto_route/auto_route.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/constants/app_constants.dart';
+import '../../../../core/constants/app_colors.dart';
 import '../../../house/domain/entities/house.dart';
 import '../../../house/presentation/screens/house_settings_screen.dart';
 import '../../../house/presentation/viewmodels/house_controller.dart';
 
-@RoutePage()
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
@@ -17,16 +17,17 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final houseState = ref.watch(houseNotifierProvider);
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: AppColors.backgroundLight,
       body: SafeArea(
         child: houseState.when(
           data: (house) => house == null
               ? const _WelcomeView()
               : _HouseDashboardView(house: house),
-          loading: () => const Center(child: CircularProgressIndicator()),
+          loading: () => const Center(
+            child: CircularProgressIndicator(color: AppColors.primary),
+          ),
           error: (error, stack) => _ErrorView(
-            onRetry: () =>
-                ref.read(houseNotifierProvider.notifier).refresh(),
+            onRetry: () => ref.read(houseNotifierProvider.notifier).refresh(),
           ),
         ),
       ),
@@ -39,18 +40,16 @@ class _WelcomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
           colors: [
-            theme.primaryColor.withOpacity(0.1),
-            theme.scaffoldBackgroundColor,
-            theme.scaffoldBackgroundColor,
+            AppColors.backgroundLight,
+            AppColors.surfaceLight,
           ],
-          stops: const [0.0, 0.4, 1.0],
+          stops: [0.0, 1.0],
         ),
       ),
       child: Padding(
@@ -60,10 +59,17 @@ class _WelcomeView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const Spacer(),
-            Icon(
-              Icons.home_work_outlined,
-              size: 120,
-              color: theme.primaryColor,
+            Container(
+              padding: const EdgeInsets.all(32),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.home_work_outlined,
+                size: 80,
+                color: AppColors.primary,
+              ),
             )
                 .animate()
                 .scale(
@@ -73,49 +79,65 @@ class _WelcomeView extends StatelessWidget {
                 .then()
                 .shimmer(
                   duration: 1200.ms,
-                  color: theme.primaryColor.withOpacity(0.5),
+                  color: AppColors.primary.withOpacity(0.5),
                 ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 32),
             Text(
               'EvArkadaşım\'a Hoş Geldin',
               textAlign: TextAlign.center,
-              style: theme.textTheme.headlineLarge?.copyWith(
+              style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: theme.primaryColorDark,
+                color: AppColors.textPrimaryLight,
               ),
             ),
             const SizedBox(height: 16),
             Text(
               'Ev arkadaşlarınızla ortak giderlerinizi ve evinizi kolayca yönetin.',
               textAlign: TextAlign.center,
-              style: theme.textTheme.titleMedium?.copyWith(
-                color: Colors.grey[700],
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                color: AppColors.textSecondaryLight,
                 height: 1.5,
               ),
             ),
             const Spacer(),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                textStyle: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                backgroundColor: AppColors.primary,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 18),
+                elevation: 0,
+                shadowColor: AppColors.primary.withOpacity(0.3),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
                 ),
               ),
-              onPressed: () => context.router.pushNamed('/house/create'),
-              child: const Text('Yeni Ev Oluştur'),
+              onPressed: () => Navigator.of(context).pushNamed('/house/create'),
+              child: const Text(
+                'Yeni Ev Oluştur',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
             const SizedBox(height: 16),
             OutlinedButton(
               style: OutlinedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                textStyle: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                foregroundColor: AppColors.primary,
+                side: const BorderSide(color: AppColors.primary, width: 2),
+                padding: const EdgeInsets.symmetric(vertical: 18),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
                 ),
               ),
-              onPressed: () => context.router.pushNamed('/house/join'),
-              child: const Text('Mevcut Eve Katıl'),
+              onPressed: () => Navigator.of(context).pushNamed('/house/join'),
+              child: const Text(
+                'Mevcut Eve Katıl',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
             const Spacer(),
           ]
@@ -168,7 +190,7 @@ class _HouseHeader extends StatelessWidget {
         content: Text('Ev kodu kopyalandı: $code'),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        backgroundColor: Colors.green.shade700,
+        backgroundColor: AppColors.success,
         duration: const Duration(seconds: 2),
       ),
     );
@@ -176,18 +198,18 @@ class _HouseHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24),
         gradient: LinearGradient(
           colors: [
-            theme.primaryColor.withOpacity(0.1),
-            theme.primaryColor.withOpacity(0.05),
+            AppColors.primary.withOpacity(0.1),
+            AppColors.primary.withOpacity(0.05),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
+        boxShadow: AppColors.cardShadow,
       ),
       child: Padding(
         padding: const EdgeInsets.all(AppConstants.defaultPadding),
@@ -199,12 +221,12 @@ class _HouseHeader extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: theme.primaryColor.withOpacity(0.1),
+                    color: AppColors.primary.withOpacity(0.15),
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.home_filled,
-                    color: theme.primaryColor,
+                    color: AppColors.primary,
                     size: 32,
                   ),
                 ),
@@ -215,15 +237,16 @@ class _HouseHeader extends StatelessWidget {
                     children: [
                       Text(
                         house.name,
-                        style: theme.textTheme.headlineSmall?.copyWith(
+                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                           fontWeight: FontWeight.bold,
+                          color: AppColors.textPrimaryLight,
                         ),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         '${house.memberCount} ev arkadaşı',
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          color: Colors.grey[600],
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: AppColors.textSecondaryLight,
                         ),
                       ),
                     ],
@@ -242,36 +265,41 @@ class _HouseHeader extends StatelessWidget {
                       value: 'settings',
                       child: Row(
                         children: [
-                          Icon(Icons.settings_outlined),
+                          Icon(Icons.settings_outlined, color: AppColors.textSecondaryLight),
                           SizedBox(width: 8),
                           Text('Ev Ayarları'),
                         ],
                       ),
                     ),
                   ],
-                  icon: const Icon(Icons.more_vert),
+                  icon: const Icon(Icons.more_vert, color: AppColors.textSecondaryLight),
                 ),
               ],
             ),
             const SizedBox(height: 16),
-            const Divider(),
+            Divider(color: AppColors.dividerLight),
             const SizedBox(height: 12),
             Row(
               children: [
-                const Icon(Icons.vpn_key_outlined,
-                    color: Colors.grey, size: 20),
+                const Icon(
+                  Icons.vpn_key_outlined,
+                  color: AppColors.textSecondaryLight,
+                  size: 20,
+                ),
                 const SizedBox(width: 8),
                 Text(
                   'Ev Kodu:',
-                  style: Theme.of(context).textTheme.bodyMedium,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: AppColors.textSecondaryLight,
+                  ),
                 ),
                 const Spacer(),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.05),
+                    color: AppColors.primary.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(30),
+                    border: Border.all(color: AppColors.primary.withOpacity(0.2)),
                   ),
                   child: Row(
                     children: [
@@ -281,13 +309,18 @@ class _HouseHeader extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                           letterSpacing: 2,
                           fontFamily: 'monospace',
+                          color: AppColors.primary,
                         ),
                       ),
                       const SizedBox(width: 8),
                       InkWell(
                         onTap: () => _copyHouseCode(context, house.code),
                         borderRadius: BorderRadius.circular(24),
-                        child: const Icon(Icons.copy, size: 20),
+                        child: const Icon(
+                          Icons.copy,
+                          size: 20,
+                          color: AppColors.primary,
+                        ),
                       ),
                     ],
                   ),
@@ -306,14 +339,13 @@ class _ActionGrid extends StatelessWidget {
   final String houseCode;
 
   void _shareHouseCode(BuildContext context) {
-    // TODO: Gerçek paylaşım için share_plus paketi kullanılabilir.
     Clipboard.setData(ClipboardData(text: houseCode));
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: const Text('Ev kodu kopyalandı! Arkadaşlarınızla paylaşabilirsiniz.'),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: AppColors.info,
         duration: const Duration(seconds: 3),
       ),
     );
@@ -326,28 +358,28 @@ class _ActionGrid extends StatelessWidget {
         'title': 'Harcama Ekle',
         'subtitle': 'Yeni bir ortak harcama',
         'icon': Icons.add_shopping_cart_outlined,
-        'color': Colors.green,
-        'onTap': () => context.router.pushNamed('/expenses/add'),
+        'color': AppColors.success,
+        'onTap': () => Navigator.of(context).pushNamed('/expenses/add'),
       },
       {
         'title': 'Harcamaları Gör',
         'subtitle': 'Bakiyeleri inceleyin',
         'icon': Icons.receipt_long_outlined,
-        'color': Colors.blue,
-        'onTap': () => context.router.pushNamed('/expenses'),
+        'color': AppColors.info,
+        'onTap': () => Navigator.of(context).pushNamed('/expenses'),
       },
       {
         'title': 'Ev Kodunu Paylaş',
         'subtitle': 'Arkadaşlarını davet et',
         'icon': Icons.share_outlined,
-        'color': Colors.orange,
+        'color': AppColors.warning,
         'onTap': () => _shareHouseCode(context),
       },
       {
         'title': 'Ayarlar',
         'subtitle': 'Ev ayarlarını düzenle',
         'icon': Icons.settings_outlined,
-        'color': Colors.purple,
+        'color': AppColors.secondary,
         'onTap': () => Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => const HouseSettingsScreen(),
             )),
@@ -401,57 +433,41 @@ class _ActionCard extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24),
-          gradient: RadialGradient(
-            colors: [
-              color.withOpacity(0.3),
-              Theme.of(context).cardColor,
-            ],
-            center: const Alignment(-1.2, -1.5),
-            radius: 2,
+          color: AppColors.cardLight,
+          border: Border.all(
+            color: AppColors.borderLight,
+            width: 0.5,
           ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
+          boxShadow: AppColors.cardShadow,
         ),
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(20.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.9),
+                  color: color.withOpacity(0.15),
                   borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: color.withOpacity(0.5),
-                      blurRadius: 8,
-                      offset: const Offset(2, 2),
-                    ),
-                  ],
                 ),
-                child: Icon(icon, color: Colors.white, size: 28),
+                child: Icon(icon, color: color, size: 28),
               ),
               const Spacer(),
               Text(
                 title,
-                style: Theme.of(context)
-                    .textTheme
-                    .titleMedium
-                    ?.copyWith(fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface),
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textPrimaryLight,
+                ),
               ),
               const SizedBox(height: 4),
               Text(
                 subtitle,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                    ),
+                  color: AppColors.textSecondaryLight,
+                ),
               ),
             ],
           ),
@@ -473,31 +489,44 @@ class _ErrorView extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.cloud_off,
-              size: 80,
-              color: Colors.red.shade300,
+            Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: AppColors.error.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.cloud_off,
+                size: 64,
+                color: AppColors.error,
+              ),
             ),
             const SizedBox(height: 24),
             Text(
               'Bir Hata Oluştu',
               textAlign: TextAlign.center,
-              style: Theme.of(context)
-                  .textTheme
-                  .headlineSmall
-                  ?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: AppColors.textPrimaryLight,
+              ),
             ),
             const SizedBox(height: 8),
-            const Text(
+            Text(
               'Veriler yüklenirken bir sorun oluştu. Lütfen internet bağlantınızı kontrol edin ve tekrar deneyin.',
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: AppColors.textSecondaryLight,
+              ),
             ),
             const SizedBox(height: 24),
             ElevatedButton.icon(
               onPressed: onRetry,
               icon: const Icon(Icons.refresh),
               label: const Text('Yeniden Dene'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                foregroundColor: Colors.white,
+              ),
             ),
           ],
         )
